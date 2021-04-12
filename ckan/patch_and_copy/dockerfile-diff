@@ -1,0 +1,28 @@
+27a28
+> 	      redis-server \
+35a37
+> ENV GCP=yes
+54a57
+>     ckan-pip install --upgrade --no-cache-dir ckanext-oauth2==0.7.0 && \
+57c60,65
+<     cp -v $CKAN_VENV/src/ckan/contrib/docker/ckan-entrypoint.sh /ckan-entrypoint.sh && \
+---
+>     # If GCP is used, use entrypoint from docker-GCP folder
+>     if [ "$GCP" = "yes" ];then \
+>         cp -v $CKAN_VENV/src/ckan/contrib/docker-GCP/ckan-entrypoint.sh /ckan-entrypoint.sh; \
+>     else \
+>         cp -v $CKAN_VENV/src/ckan/contrib/docker/ckan-entrypoint.sh /ckan-entrypoint.sh; \
+>     fi && \
+59c67,76
+<     chown -R ckan:ckan $CKAN_HOME $CKAN_VENV $CKAN_CONFIG $CKAN_STORAGE_PATH
+---
+>     chown -R ckan:ckan $CKAN_HOME $CKAN_VENV $CKAN_CONFIG $CKAN_STORAGE_PATH && \
+>     . /usr/lib/ckan/venv/bin/activate && \
+>     cd $CKAN_VENV/src/ckan/ckanext/ckanext-viewerpermissions && \
+>     python setup.py develop && \
+>     cd ../ckanext-vwt_theme && \
+>     python setup.py develop && \
+>     cd ../ckanext-custom_vocabulary && \
+>     python setup.py develop && \
+>     cd ../../../../.. && \
+>     deactivate

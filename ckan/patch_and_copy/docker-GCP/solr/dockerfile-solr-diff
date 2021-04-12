@@ -1,0 +1,10 @@
+10a11,13
+> # Copy security to container
+> COPY ./contrib/docker-GCP/solr/security.json /opt/solr/server/solr/
+> 
+12c15
+< ADD ./contrib/docker/solr/solrconfig.xml \
+---
+> ADD ./contrib/docker-GCP/solr/solrconfig.xml \
+27a31
+> RUN chown -R $SOLR_USER:$SOLR_USER /opt/solr/server/solr/security.json

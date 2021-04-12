@@ -1,0 +1,79 @@
+10d9
+<   solr_data:
+20c19
+<       - db
+---
+>       - cloudsql-proxy
+24c23
+<       - db
+---
+>       - cloudsql-proxy
+29,31c28
+<       - CKAN_SQLALCHEMY_URL=postgresql://ckan:${POSTGRES_PASSWORD}@db/ckan
+<       - CKAN_DATASTORE_WRITE_URL=postgresql://ckan:${POSTGRES_PASSWORD}@db/datastore
+<       - CKAN_DATASTORE_READ_URL=postgresql://datastore_ro:${DATASTORE_READONLY_PASSWORD}@db/datastore
+---
+>       - CKAN_SQLALCHEMY_URL=${CKAN_SQLALCHEMY_URL}
+32a30,31
+>       - CKAN_SOLR_USER=${CKAN_SOLR_USER}
+>       - CKAN_SOLR_PASSWORD=${CKAN_SOLR_PASSWORD}
+34d32
+<       - CKAN_DATAPUSHER_URL=http://datapusher:8800
+37,38c35,46
+<       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+<       - DS_RO_PASS=${DATASTORE_READONLY_PASSWORD}
+---
+>       - CKAN_OAUTH2_AUTHORIZATION_ENDPOINT=${CKAN_OAUTH2_AUTHORIZATION_ENDPOINT}
+>       - CKAN_OAUTH2_TOKEN_ENDPOINT=${CKAN_OAUTH2_TOKEN_ENDPOINT}
+>       - CKAN_OAUTH2_CLIENT_ID=${CKAN_OAUTH2_CLIENT_ID}
+>       - CKAN_OAUTH2_CLIENT_SECRET=${CKAN_OAUTH2_CLIENT_SECRET}
+>       - CKAN_OAUTH2_PROFILE_API_URL=${CKAN_OAUTH2_PROFILE_API_URL}
+>       - CKAN_OAUTH2_SCOPE=${CKAN_OAUTH2_SCOPE}
+>       - CKAN_OAUTH2_PROFILE_API_USER_FIELD=${CKAN_OAUTH2_PROFILE_API_USER_FIELD}
+>       - CKAN_OAUTH2_PROFILE_API_MAIL_FIELD=${CKAN_OAUTH2_PROFILE_API_MAIL_FIELD}
+>       - CKAN_PRIVATE_ORGS=${CKAN_PRIVATE_ORGS}
+>       - OAUTHLIB_INSECURE_TRANSPORT=${OAUTHLIB_INSECURE_TRANSPORT}
+>       - OAUTHLIB_RELAX_TOKEN_SCOPE=${OAUTHLIB_RELAX_TOKEN_SCOPE}
+>       - GCP_SQL_INSTANCE=${GCP_SQL_INSTANCE}
+45,47c53,56
+<   datapusher:
+<     container_name: datapusher
+<     image: clementmouchet/datapusher
+---
+>   cloudsql-proxy:
+>     container_name: cloudsql-proxy
+>     image: gcr.io/cloudsql-docker/gce-proxy:1.16
+>     command: /cloud_sql_proxy --dir=/cloudsql -instances=${GCP_SQL_INSTANCE}=tcp:0.0.0.0:5432 -credential_file=./contrib/docker-GCP/credentials.json
+49,61c58
+<       - "8800:8800"
+< 
+<   db:
+<     container_name: db
+<     build:
+<       context: ../../
+<       dockerfile: contrib/docker/postgresql/Dockerfile
+<       args:
+<         - DS_RO_PASS=${DATASTORE_READONLY_PASSWORD}
+<         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+<     environment:
+<       - DS_RO_PASS=${DATASTORE_READONLY_PASSWORD}
+<       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+---
+>       - 5432:5432
+63,65c60,62
+<       - pg_data:/var/lib/postgresql/data
+<     healthcheck:
+<       test: ["CMD", "pg_isready", "-U", "ckan"]
+---
+>       - ./mnt/stateful_partition/cloudsql:/cloudsql
+>       - ./credentials.json:/contrib/docker-GCP/credentials.json
+>     restart: always
+71,74c68,70
+<       dockerfile: contrib/docker/solr/Dockerfile
+<     volumes:
+<       - solr_data:/opt/solr/server/solr/ckan/data
+< 
+---
+>       dockerfile: contrib/docker-GCP/solr/Dockerfile
+>     ports:
+>       - "127.0.0.1:${SOLR_PORT}:8983"
