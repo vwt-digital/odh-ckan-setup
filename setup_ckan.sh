@@ -86,12 +86,12 @@ cp "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/solr/solr_generate_pass.
 ###########################
 echo "Patch general files" &&
 # Patch deployment.ini to use right plugins (CKAN extensions) and to contain the right variables for later setup
-patch "${_CKAN_INSTALLATION_PATH}"/ckan/config/deployment.ini_tmpl "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/deployment-ini-tmpl-diff &&
+patch "${_CKAN_INSTALLATION_PATH}"/ckan/config/deployment.ini_tmpl "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/deployment-ini-tmpl.patch &&
 # Patch Dockerfile so that extensions are installed
 # With the file, it is assumed that GCP entities are used, if you do not want that you can set the "GCP" variable to False
-patch "${_CKAN_INSTALLATION_PATH}"/Dockerfile "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/dockerfile-diff &&
+patch "${_CKAN_INSTALLATION_PATH}"/Dockerfile "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/dockerfile.patch &&
 # Patch environment file to set right variables for OAUTH2 extension and custom viewerpermissions extension
-patch "${_CKAN_INSTALLATION_PATH}"/ckan/config/environment.py "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/environment-diff &&
+patch "${_CKAN_INSTALLATION_PATH}"/ckan/config/environment.py "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/environment.patch &&
 ###########################
 # Patch CKAN docker folder
 ############
@@ -99,9 +99,9 @@ patch "${_CKAN_INSTALLATION_PATH}"/ckan/config/environment.py "${_CKAN_SETUP_PAT
 ###########################
 echo "Patch CKAN docker folder" &&
 # Patch ckan-entrypoint to contain right variables for OAUTH2 extension and custom viewerpermissions extension
-patch "${_CKAN_INSTALLATION_PATH}"/contrib/docker/ckan-entrypoint.sh "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/ckan-entrypoint-diff &&
+patch "${_CKAN_INSTALLATION_PATH}"/contrib/docker/ckan-entrypoint.sh "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/ckan-entrypoint.patch &&
 # Patch docker-compose to contain right variables for OAUTH2 extension and custom viewerpermissions extension
-patch "${_CKAN_INSTALLATION_PATH}"/contrib/docker/docker-compose.yml "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/docker-compose-diff &&
+patch "${_CKAN_INSTALLATION_PATH}"/contrib/docker/docker-compose.yml "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/docker-compose.patch &&
 ###########################
 # Create CKAN Google Cloud Platform (GCP) folder
 ############
@@ -115,17 +115,17 @@ echo "Create CKAN GCP folder" &&
 # the CloudSQL proxy starts up a couple of times but it does work
 # Furthermore remove the need for the datapusher URL variable to be present
 # And add rebuilding of database
-patch "${_CKAN_INSTALLATION_PATH}"/contrib/docker-GCP/ckan-entrypoint.sh "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/ckan-entrypoint-diff &&
+patch "${_CKAN_INSTALLATION_PATH}"/contrib/docker-GCP/ckan-entrypoint.sh "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/ckan-entrypoint.patch &&
 # Patch Nginx configuration so that it can be used by the VM on GCP as defined in the cloud-compute-instance folder
-patch "${_CKAN_INSTALLATION_PATH}"/contrib/docker-GCP/nginx.conf "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/nginx-diff &&
+patch "${_CKAN_INSTALLATION_PATH}"/contrib/docker-GCP/nginx.conf "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/nginx.patch &&
 # Patch docker-compose file to use right environment variables for GCP access
 # Also add environment variables for OAUTH2 extension and custom viewerpermissions extension
 # And use Cloudsql-proxy instead of local database
 # Note: this is not the docker-compose used by the VM on GCP, it is the docker-compose that you can use to locally
 #       set up CKAN with a Cloudsql-proxy. The docker-compose used on GCP is in the folder "cloud-compute-instance"
-patch "${_CKAN_INSTALLATION_PATH}"/contrib/docker-GCP/docker-compose.yml "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/docker-compose-diff &&
+patch "${_CKAN_INSTALLATION_PATH}"/contrib/docker-GCP/docker-compose.yml "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/docker-compose.patch &&
 # Patch SOLR folder to use the generated SOLR password
-patch "${_CKAN_INSTALLATION_PATH}"/contrib/docker-GCP/solr/Dockerfile "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/solr/dockerfile-solr-diff &&
+patch "${_CKAN_INSTALLATION_PATH}"/contrib/docker-GCP/solr/Dockerfile "${_CKAN_SETUP_PATH}"/ckan/patch_and_copy/docker-GCP/solr/dockerfile-solr.patch &&
 # Set .env files
 set_env_files ||
 echo "ERROR: Setting CKAN up with GCP failed" && exit 1

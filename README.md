@@ -5,12 +5,6 @@
 To setup CKAN for Google Cloud Platform (GCP), clone [CKAN](https://github.com/ckan/ckan) and run [setup_ckan.sh](setup_ckan.sh) with as arguments the path to the setup folder and the path to your CKAN folder. For example:
 ```setup_ckan.sh path/to/setup path/to/ckan```.
 
-**Note:** The files ending on ```-diff``` are files based on tag 
-[ckan-2.9.2](https://github.com/ckan/ckan/tree/ckan-2.9.2). When updating CKAN, it is possible
-that [setup_ckan.sh](setup_ckan.sh) does not work completely anymore but in the ```-diff```
-files you can see the changes made to the files to make CKAN run with GCP and or with the 
-[extensions](ckan/ckan-extensions).
-
 **Note:** If you are installing via the [google-cloud-init.yml](ckan/docker-GCP/cloud-compute-instance/google-cloud-init.yml),
 then CKAN is cloned in this file. Cloning is only necessary when running locally without
 [google-cloud-init.yml](ckan/docker-GCP/cloud-compute-instance/google-cloud-init.yml).
@@ -179,8 +173,8 @@ When updating CKAN, note that there are [stable
 versions](https://github.com/ckan/ckan/releases). The [master
 branch](https://github.com/ckan/ckan) can be unstable.
 
-**Note:** The files ending on ```-diff``` are files based on tag 
+**Note:** The files with extension ```.patch``` are files based on tag 
 [ckan-2.9.2](https://github.com/ckan/ckan/tree/ckan-2.9.2). When updating CKAN, it is possible
-that [setup_ckan.sh](setup_ckan.sh) does not work completely anymore but in the ```-diff```
+that [setup_ckan.sh](setup_ckan.sh) does not work completely anymore but in the ```.patch```
 files you can see the changes made to the files to make CKAN run with GCP and or with the 
 [extensions](ckan/ckan-extensions).
